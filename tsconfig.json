@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "module": "commonjs",
+    "target": "es2017",
+    "sourceMap": true,
+    "lib": ["dom", "esnext.asynciterable", "es2017"],
+    "outDir": "./dist-server",
+    "baseUrl": "./",
+    "paths": {
+      "config": ["./config.json"]
+    }
+  },
+  "typeRoots": ["./node_modules/@types"],
+
+  "include": ["./**/*"],
+  "exclude": ["**/*.spec.ts"]
+}

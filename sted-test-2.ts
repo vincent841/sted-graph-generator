@@ -47,12 +47,11 @@ var exampleGraph: StedGraph = {
       inlets: [
         { name: 'cond', node: 'A', type: 'fluid' },
         { name: 'evap', node: 'A', type: 'fluid' },
-        { name: 'cond', node: 'C', type: 'fluid' },
-        { name: 'evap', node: 'C', type: 'fluid' }
+        { name: 'evap', node: 'E', type: 'fluid' }
       ],
       outlets: [
         { name: 'cond', node: 'C', type: 'fluid' },
-        { name: 'evap', node: 'C', type: 'fluid' }
+        { name: 'evap', node: 'E', type: 'fluid' }
       ]
     },
     {
@@ -60,11 +59,60 @@ var exampleGraph: StedGraph = {
       type: 'vchp',
       inlets: [
         { name: 'cond', node: 'B', type: 'fluid' },
+        { name: 'cond', node: 'D', type: 'fluid' },
+        {
+          name: 'evap',
+          node: '',
+          type: 'fluid',
+          data: {
+            Y: { H2O: 0.99, N2O: 0.01 },
+            m: 1.0,
+            T: 333.0,
+            p: 101200.0,
+            q: 1.0,
+            h: 1.0
+          }
+        }
+      ],
+      outlets: [
+        { name: 'cond', node: 'D', type: 'fluid' },
+        { name: 'evap', node: 'D', type: 'fluid' }
+      ]
+    },
+    {
+      name: 'D',
+      type: 'vchp',
+      inlets: [
+        { name: 'cond', node: 'C', type: 'fluid' },
+        { name: 'evap', node: 'C', type: 'fluid' }
+      ],
+      outlets: [
+        { name: 'cond', node: 'C', type: 'fluid' },
+        { name: 'evap', node: '', type: 'fluid' }
+      ]
+    },
+    {
+      name: 'E',
+      type: 'vchp',
+      inlets: [
+        {
+          name: 'cond',
+          node: '',
+          type: 'fluid',
+          data: {
+            Y: { H2O: 0.99, N2O: 0.01 },
+            m: 1.0,
+            T: 333.0,
+            p: 101200.0,
+            q: 1.0,
+            h: 1.0
+          }
+        },
         { name: 'evap', node: 'B', type: 'fluid' }
       ],
       outlets: [
-        { name: 'cond', node: 'A', type: 'fluid' },
-        { name: 'evap', node: 'A', type: 'fluid' }
+        { name: 'cond', node: '', type: 'fluid' },
+        { name: 'evap', node: 'B', type: 'fluid' }
       ]
     }
   ]

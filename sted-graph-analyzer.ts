@@ -1,22 +1,7 @@
 import { alg, Graph } from 'graphlib';
 import deepClone from 'lodash/cloneDeep';
 
-export interface StedInOutLet {
-  node: string
-  type: string
-}
-
-export interface StedNode {
-  name: string
-  type: string
-  inlets: StedInOutLet[]
-  outlets: StedInOutLet[]
-  start?: boolean
-}
-
-export interface StedGraph {
-  stedNodes: StedNode[]
-}
+import { StedGraph } from './sted-graph-type';
 
 export class StedGraphAnalyer {
   private stedGraph: StedGraph
@@ -47,35 +32,34 @@ export class StedGraphAnalyer {
 
     cycles.forEach(cycle => {
       // choose first two nodes as a cutting edge
-      let firstNode =
+      // TODO: need to check if there are only two nodes with a circle?
+      let backNode =
         newGraph.stedNodes.find(node => node.name === cycle[0] && node.outlets.find(outl => outl.node === cycle[1])) ||
         newGraph.stedNodes.find(node => node.name === cycle[1] && node.outlets.find(outl => outl.node === cycle[0]))
-      let secondNode =
+      let frontNode =
         newGraph.stedNodes.find(node => node.name === cycle[0] && node.inlets.find(inl => inl.node === cycle[1])) ||
         newGraph.stedNodes.find(node => node.name === cycle[1] && node.inlets.find(inl => inl.node === cycle[0]))
 
       // create new node name
-      let cycleNodeName = firstNode.name + secondNode.name
+      let cycleNodeName = backNode.name + frontNode.name
       console.debug('[DEBUG] cycleNodeName: ', cycleNodeName)
 
       // append new circle node to the exsiting graph
       newGraph.stedNodes.push({
         name: cycleNodeName,
         type: 'cycle',
-        inlets: [
-          { node: firstNode.name, type: firstNode.outlets.find(outlet => outlet.node === secondNode.name)?.type }
-        ],
-        outlets: [{ node: secondNode.name, type: secondNode.inlets.find(inlet => inlet.node === firstNode.name)?.type }]
+        inlets: [{ node: backNode.name, type: backNode.outlets.find(outlet => outlet.node === frontNode.name)?.type }],
+        outlets: [{ node: frontNode.name, type: frontNode.inlets.find(inlet => inlet.node === backNode.name)?.type }]
       })
 
       // update the inlet and outlet of both side-nodes by new generated node
-      firstNode.outlets.map(outl => {
-        if (outl.node === secondNode.name) {
+      backNode.outlets.map(outl => {
+        if (outl.node === frontNode.name) {
           outl.node = cycleNodeName
         }
       })
-      secondNode.inlets.map(inl => {
-        if (inl.node === firstNode.name) {
+      frontNode.inlets.map(inl => {
+        if (inl.node === backNode.name) {
           inl.node = cycleNodeName
         }
       })

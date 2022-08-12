@@ -30,27 +30,49 @@ export class StedGraphAnalyer {
 
   sortNodes(stedBaseGraph: StedGraph) {
     var genGraph = this.generateGraph(stedBaseGraph.stedNodes)
-    console.log('genGraph: ', genGraph)
     return alg.topsort(genGraph)
   }
 
-  confirmPrevNextNode(nodes: string[], refGraph: StedGraph) {
+  lineUpTwoNodes(nodes: string[], refGraph: StedGraph) {
     let node0: StedNode = refGraph.stedNodes.find(node => node.name === nodes[0])
     let node1: StedNode = refGraph.stedNodes.find(node => node.name === nodes[1])
 
     return node0.outlets.find(outl => outl.node === nodes[1]) ? [node0, node1] : [node1, node0]
   }
 
+  getSortedGraph(cycles, graphData: StedGraph): any {
+    var generatedGraph = this.generateGraph(graphData.stedNodes)
+
+    cycles.forEach(cycle => {
+      generatedGraph.removeEdge(cycle[0], cycle[1])
+    })
+
+    console.log('original graphData: ', graphData)
+
+    let sortedList = alg.isAcyclic(generatedGraph) ? alg.topsort(generatedGraph) : []
+
+    sortedList = ['E', 'A', 'C', 'B', 'D']
+
+    sortedList.forEach((element, sortedIndex) => {
+      let originalIndex = graphData.stedNodes.findIndex(node => node.name == element)
+      if (originalIndex > 0) {
+        graphData.stedNodes.splice(sortedIndex, 0, graphData.stedNodes.splice(originalIndex, 1)[0])
+      }
+    })
+  }
+
   generateGraphWithCircles(): StedGraph {
     let cycles = this.findCycles()
+    console.debug('[DEBUG] cycles: ', cycles)
+
     var newGraph = deepClone(this.stedGraph)
 
-    console.debug('[DEBUG] cycles: ', cycles)
+    this.getSortedGraph(cycles, newGraph)
 
     cycles.forEach(cycle => {
       // choose first two nodes as a cutting edge
       // TODO: need to check if there are only two nodes with a circle?
-      let [prevNode, nextNode] = this.confirmPrevNextNode([cycle[0], cycle[1]], newGraph)
+      let [prevNode, nextNode] = this.lineUpTwoNodes([cycle[0], cycle[1]], newGraph)
 
       // create new node name
       let cycleNodeName = prevNode.name + '_' + nextNode.name
@@ -64,7 +86,7 @@ export class StedGraphAnalyer {
         outlets: [{ node: nextNode.name, type: nextNode.inlets.find(inlet => inlet.node === prevNode.name)?.type }]
       })
 
-      // update the inlet and outlet of both side-nodes by new generated node
+      // update the adjacent nodes for a new generated node
       prevNode.outlets.map(outl => {
         if (outl.node === nextNode.name) {
           outl.node = cycleNodeName
@@ -75,14 +97,7 @@ export class StedGraphAnalyer {
           inl.node = cycleNodeName
         }
       })
-
-      console.log(
-        'updated newGraph: ',
-        newGraph.stedNodes.find(node => node.name === 'C')
-      )
     })
-
-    console.debug('[DEBUG] final generated graph: \n', newGraph)
 
     return newGraph
   }

@@ -51,7 +51,7 @@ export class StedGraphAnalyer {
 
     let sortedList = alg.isAcyclic(generatedGraph) ? alg.topsort(generatedGraph) : []
 
-    sortedList = ['E', 'A', 'C', 'B', 'D']
+    console.log('soretedList: ', sortedList)
 
     sortedList.forEach((element, sortedIndex) => {
       let originalIndex = graphData.stedNodes.findIndex(node => node.name == element)
@@ -59,6 +59,8 @@ export class StedGraphAnalyer {
         graphData.stedNodes.splice(sortedIndex, 0, graphData.stedNodes.splice(originalIndex, 1)[0])
       }
     })
+
+    console.log('sorted graphData: ', graphData)
   }
 
   generateGraphWithCircles(): StedGraph {

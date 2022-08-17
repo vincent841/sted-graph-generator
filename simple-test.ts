@@ -83,7 +83,7 @@ try {
   let stedGraphAnalyzer = new StedGraphAnalyer(exampleGraph)
   stedGraphAnalyzer.print()
 
-  console.log('generated graph: ', JSON.stringify(stedGraphAnalyzer.generateGraphWithCircles()))
+  console.log('generated graph: ', JSON.stringify(stedGraphAnalyzer.generateAnalyzableGraph()))
 } catch (ex) {
   console.error('Exception: ', ex)
 }

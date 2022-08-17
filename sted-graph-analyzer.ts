@@ -5,6 +5,7 @@ import { StedGraph, StedNode } from './sted-graph-type';
 
 export class StedGraphAnalyer {
   private stedGraph: StedGraph
+  static specialNodeName: string = 'recalc'
 
   constructor(graphData: StedGraph) {
     this.stedGraph = graphData
@@ -47,11 +48,9 @@ export class StedGraphAnalyer {
       generatedGraph.removeEdge(cycle[0], cycle[1])
     })
 
-    console.log('original graphData: ', graphData)
-
     let sortedList = alg.isAcyclic(generatedGraph) ? alg.topsort(generatedGraph) : []
 
-    console.log('soretedList: ', sortedList)
+    // console.log('soretedList: ', sortedList)
 
     sortedList.forEach((element, sortedIndex) => {
       let originalIndex = graphData.stedNodes.findIndex(node => node.name == element)
@@ -60,10 +59,10 @@ export class StedGraphAnalyer {
       }
     })
 
-    console.log('sorted graphData: ', graphData)
+    // console.log('sorted graphData: ', graphData)
   }
 
-  generateGraphWithCircles(): StedGraph {
+  generateAnalyzableGraph(): StedGraph {
     let cycles = this.findCycles()
     console.debug('[DEBUG] cycles: ', cycles)
 
@@ -73,17 +72,17 @@ export class StedGraphAnalyer {
 
     cycles.forEach(cycle => {
       // choose first two nodes as a cutting edge
-      // TODO: need to check if there are only two nodes with a circle?
+      // TODO: need to check if there are only two nodes with a cycle?
       let [prevNode, nextNode] = this.lineUpTwoNodes([cycle[0], cycle[1]], newGraph)
 
       // create new node name
       let cycleNodeName = prevNode.name + '_' + nextNode.name
       console.debug('[DEBUG] cycleNodeName: ', cycleNodeName)
 
-      // append new circle node to the exsiting graph
+      // append new cycle node to the exsiting graph
       newGraph.stedNodes.push({
         name: cycleNodeName,
-        type: 'cycle',
+        type: StedGraphAnalyer.specialNodeName,
         inlets: [{ node: prevNode.name, type: prevNode.outlets.find(outlet => outlet.node === nextNode.name)?.type }],
         outlets: [{ node: nextNode.name, type: nextNode.inlets.find(inlet => inlet.node === prevNode.name)?.type }]
       })

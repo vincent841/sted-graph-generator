@@ -122,7 +122,7 @@ try {
   let stedGraphAnalyzer = new StedGraphAnalyer(exampleGraph)
   stedGraphAnalyzer.print()
 
-  let generatedGraph = stedGraphAnalyzer.generateGraphWithCircles()
+  let generatedGraph = stedGraphAnalyzer.generateAnalyzableGraph()
 
   console.log(JSON.stringify(generatedGraph))
 } catch (ex) {

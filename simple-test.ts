@@ -7,32 +7,31 @@ var exampleGraph: StedGraph = {
       name: 'A',
       type: 'custom',
       inlets: [{ name: 'custin', node: '', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'B', type: 'fluid' }],
-      start: true
+      outlets: [{ name: 'custout', node: 'B', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'B',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'A', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'C', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'C', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'C',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'B', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'D', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'D', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'D',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'C', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'E', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'E', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'E',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'D', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'B', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'B', type: 'fluid', wire: 'custin' }]
     }
   ]
 }
@@ -43,38 +42,37 @@ var resultGraph: StedGraph = {
       name: 'A',
       type: 'custom',
       inlets: [{ name: 'custin', node: '', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'B', type: 'fluid' }],
-      start: true
+      outlets: [{ name: 'custout', node: 'B', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'B',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'A', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'C', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'C', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'C',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'B', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'D', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'D', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'D',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'C', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'DE', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'DE', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'E',
       type: 'custom',
       inlets: [{ name: 'custin', node: 'DE', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'B', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'B', type: 'fluid', wire: 'custin' }]
     },
     {
       name: 'DE',
-      type: 'cycle',
+      type: 'recycle',
       inlets: [{ name: 'custin', node: 'D', type: 'fluid' }],
-      outlets: [{ name: 'custout', node: 'E', type: 'fluid' }]
+      outlets: [{ name: 'custout', node: 'E', type: 'fluid', wire: 'custin' }]
     }
   ]
 }

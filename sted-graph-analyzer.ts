@@ -5,7 +5,7 @@ import { StedGraph, StedNode } from './sted-graph-type';
 
 export class StedGraphAnalyer {
   private stedGraph: StedGraph
-  static specialNodeName: string = 'recalc'
+  static specialNodeName: string = 'recycle'
 
   constructor(graphData: StedGraph) {
     this.stedGraph = graphData

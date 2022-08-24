@@ -1,8 +1,7 @@
 {
-  "name": "chef-tcp-handler",
+  "name": "sted-graph-generator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --p tsconfig.json",
@@ -11,7 +10,7 @@
     "clean": "rm -rf dist-server"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/amqplib": "^0.8.2",
     "@types/node": "^16.11.6",

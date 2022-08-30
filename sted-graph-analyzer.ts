@@ -5,7 +5,7 @@ import { StedGraph, StedNode } from './sted-graph-type';
 
 export class StedGraphAnalyer {
   private stedGraph: StedGraph
-  static specialNodeName: string = 'Recycle'
+  static recycleNodeName: string = 'Recycle'
 
   constructor(graphData: StedGraph) {
     this.stedGraph = graphData
@@ -42,16 +42,18 @@ export class StedGraphAnalyer {
   }
 
   getSortedGraph(cycles, graphData: StedGraph): any {
+    // generate a Graph instance using STED nodes
     var generatedGraph = this.generateGraph(graphData.stedNodes)
 
+    // remove cycled edges to make it acyclic
     cycles.forEach(cycle => {
       generatedGraph.removeEdge(cycle[0], cycle[1])
     })
 
+    // check if the Graph is a acyclic and apply sorting to it.
     let sortedList = alg.isAcyclic(generatedGraph) ? alg.topsort(generatedGraph) : []
 
-    // console.log('soretedList: ', sortedList)
-
+    // sort the STED graph based on Graph node sequence by sorting algorithm
     sortedList.forEach((element, sortedIndex) => {
       let originalIndex = graphData.stedNodes.findIndex(node => node.name == element)
       if (originalIndex > 0) {
@@ -82,7 +84,7 @@ export class StedGraphAnalyer {
       // append new cycle node to the exsiting graph
       newGraph.stedNodes.push({
         name: cycleNodeName,
-        type: StedGraphAnalyer.specialNodeName,
+        type: StedGraphAnalyer.recycleNodeName,
         inlets: [{ node: prevNode.name, type: prevNode.outlets.find(outlet => outlet.node === nextNode.name)?.type }],
         outlets: [{ node: nextNode.name, type: nextNode.inlets.find(inlet => inlet.node === prevNode.name)?.type }]
       })

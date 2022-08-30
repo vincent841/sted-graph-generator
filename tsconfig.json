@@ -6,16 +6,13 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": ["node"],
+    "types": ["node", "mocha"],
     "module": "commonjs",
     "target": "es2017",
     "sourceMap": true,
     "lib": ["dom", "esnext.asynciterable", "es2017"],
     "outDir": "./dist-server",
     "baseUrl": "./",
-    "paths": {
-      "config": ["./config.json"]
-    }
   },
   "typeRoots": ["./node_modules/@types"],
 

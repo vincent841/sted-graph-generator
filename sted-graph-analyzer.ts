@@ -1,7 +1,7 @@
-import { alg, Graph } from 'graphlib';
-import deepClone from 'lodash/cloneDeep';
+import { alg, Graph } from 'graphlib'
+import deepClone from 'lodash/cloneDeep'
 
-import { StedGraph, StedNode } from './sted-graph-type';
+import { StedGraph, StedNode } from './sted-graph-type'
 
 export class StedGraphAnalyer {
   private stedGraph: StedGraph
@@ -60,18 +60,19 @@ export class StedGraphAnalyer {
         graphData.stedNodes.splice(sortedIndex, 0, graphData.stedNodes.splice(originalIndex, 1)[0])
       }
     })
-
-    // console.log('sorted graphData: ', graphData)
   }
 
   generateAnalyzableGraph(): StedGraph {
     let cycles = this.findCycles()
     console.debug('[DEBUG] cycles: ', cycles)
 
+    // clone input graph
     var newGraph = deepClone(this.stedGraph)
 
+    // sort the graph
     this.getSortedGraph(cycles, newGraph)
 
+    // insert recycle node between cycled nodes
     cycles.forEach(cycle => {
       // choose first two nodes as a cutting edge
       // TODO: need to check if there are only two nodes with a cycle?

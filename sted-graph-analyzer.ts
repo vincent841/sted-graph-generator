@@ -19,7 +19,7 @@ export class StedGraphAnalyer {
     var generatedGraph = new Graph()
     stedNodeList.forEach(stedNode => {
       generatedGraph.setNode(stedNode.name)
-      stedNode.outlets.forEach(out => generatedGraph.setEdge(stedNode.name, out.node))
+      stedNode.outlets.forEach(out => generatedGraph.setEdge(stedNode.name, out.dstNode))
     })
 
     return generatedGraph
@@ -38,7 +38,7 @@ export class StedGraphAnalyer {
     let node0: StedNode = refGraph.stedNodes.find(node => node.name === nodes[0])
     let node1: StedNode = refGraph.stedNodes.find(node => node.name === nodes[1])
 
-    return node0.outlets.find(outl => outl.node === nodes[1]) ? [node0, node1] : [node1, node0]
+    return node0.outlets.find(outl => outl.dstNode === nodes[1]) ? [node0, node1] : [node1, node0]
   }
 
   getSortedGraph(cycles, graphData: StedGraph): any {
@@ -78,27 +78,43 @@ export class StedGraphAnalyer {
       // TODO: need to check if there are only two nodes with a cycle?
       let [prevNode, nextNode] = this.lineUpTwoNodes([cycle[0], cycle[1]], newGraph)
 
-      // create new node name
+      // create new node name(prevName_nextName)
       let cycleNodeName = prevNode.name + '_' + nextNode.name
       console.debug('[DEBUG] cycleNodeName: ', cycleNodeName)
 
+      // TODO: chekc if two nodes have two cycles simultaneously..
+      //  if so, we need to set up an inlet and an outlet based on both nodes(prevNode & nextNode)
       // append new cycle node to the exsiting graph
       newGraph.stedNodes.push({
         name: cycleNodeName,
         type: StedGraphAnalyer.recycleNodeName,
-        inlets: [{ node: prevNode.name, type: prevNode.outlets.find(outlet => outlet.node === nextNode.name)?.type }],
-        outlets: [{ node: nextNode.name, type: nextNode.inlets.find(inlet => inlet.node === prevNode.name)?.type }]
+        inlets: [
+          {
+            name: 'InStr',
+            type: prevNode.outlets.find(outlet => outlet.dstNode === nextNode.name)?.type,
+            srcNode: prevNode.name,
+            srcEdge: prevNode.outlets.find(outlet => outlet.dstNode === nextNode.name)?.name
+          }
+        ],
+        outlets: [
+          {
+            name: 'OutStr',
+            type: nextNode.inlets.find(inlet => inlet.srcNode === prevNode.name)?.type,
+            dstNode: nextNode.name,
+            dstEdge: nextNode.inlets.find(inlet => inlet.srcNode === prevNode.name)?.name
+          }
+        ]
       })
 
       // update the adjacent nodes for a new generated node
       prevNode.outlets.map(outl => {
-        if (outl.node === nextNode.name) {
-          outl.node = cycleNodeName
+        if (outl.dstNode === nextNode.name) {
+          outl.dstNode = cycleNodeName
         }
       })
       nextNode.inlets.map(inl => {
-        if (inl.node === prevNode.name) {
-          inl.node = cycleNodeName
+        if (inl.srcNode === prevNode.name) {
+          inl.srcNode = cycleNodeName
         }
       })
     })

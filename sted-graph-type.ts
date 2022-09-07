@@ -2,9 +2,12 @@ export interface StedInlet {
   // wire name
   name: string
   // source node name
-  node: string
   // node type
   type: string
+  // source node name
+  srcNode: string
+  // source edge name
+  srcEdge: string
   // wire object data
   data?: any
 }
@@ -12,12 +15,12 @@ export interface StedInlet {
 export interface StedOutlet {
   // wire name
   name: string
-  // destination node name
-  node: string
   // node type
   type: string
-  // destination wire name
-  wire: string
+  // destination node name
+  dstNode: string
+  // destination edge name
+  dstEdge: string
   // wire object data
   data?: any
 }

@@ -7,33 +7,33 @@ var exampleGraph: StedGraph = {
       name: 'B',
       type: 'VCHP',
       inlets: [
-        { name: 'cond', node: 'A', type: 'fluid' },
-        { name: 'evap', node: 'A', type: 'fluid' }
+        { name: 'InCond', srcNode: 'A', srcEdge: 'OutCond', type: 'fluid' },
+        { name: 'InEvap', srcNode: 'A', srcEdge: 'OutEvap', type: 'fluid' }
       ],
       outlets: [
-        { name: 'cond', node: 'C', type: 'fluid', wire: 'cond' },
-        { name: 'evap', node: 'E', type: 'fluid', wire: 'evap' }
+        { name: 'OutCond', dstNode: 'C', type: 'fluid', dstEdge: 'InStr2' },
+        { name: 'OutEvap', dstNode: 'D', type: 'fluid', dstEdge: 'InEvap' }
       ]
     },
     {
       name: 'C',
       type: 'Mix',
       inlets: [
-        { name: 'src1', node: 'D', type: 'fluid' },
-        { name: 'src2', node: 'B', type: 'fluid' }
+        { name: 'InStr1', srcNode: 'D', srcEdge: 'OutCond', type: 'fluid' },
+        { name: 'InStr2', srcNode: 'B', srcEdge: 'OutCond', type: 'fluid' }
       ],
-      outlets: [{ name: 'out', node: 'D', type: 'fluid', wire: 'cond' }]
+      outlets: [{ name: 'OutStr', dstNode: 'D', type: 'fluid', dstEdge: 'InCond' }]
     },
     {
       name: 'D',
       type: 'VCHP',
       inlets: [
-        { name: 'cond', node: 'C', type: 'fluid' },
-        { name: 'evap', node: 'B', type: 'fluid' }
+        { name: 'InCond', srcNode: 'C', srcEdge: 'OutStr', type: 'fluid' },
+        { name: 'InEvap', srcNode: 'B', srcEdge: 'OutEvap', type: 'fluid' }
       ],
       outlets: [
-        { name: 'cond', node: 'C', type: 'fluid', wire: 'src1' },
-        { name: 'evap', node: '', type: 'fluid', wire: '' }
+        { name: 'OutCond', dstNode: 'C', type: 'fluid', dstEdge: 'InStr1' },
+        { name: 'OutEvap', dstNode: '', type: 'fluid', dstEdge: '' }
       ]
     },
     {
@@ -41,8 +41,9 @@ var exampleGraph: StedGraph = {
       type: 'VCHP',
       inlets: [
         {
-          name: 'cond',
-          node: '',
+          name: 'InCond',
+          srcNode: '',
+          srcEdge: '',
           type: 'fluid',
           data: {
             Y: { H2O: 0.99, N2O: 0.01 },
@@ -54,8 +55,9 @@ var exampleGraph: StedGraph = {
           }
         },
         {
-          name: 'evap',
-          node: '',
+          name: 'InEvap',
+          srcNode: '',
+          srcEdge: '',
           type: 'fluid',
           data: {
             Y: { H2O: 0.99, N2O: 0.01 },
@@ -68,8 +70,8 @@ var exampleGraph: StedGraph = {
         }
       ],
       outlets: [
-        { name: 'cond', node: 'B', type: 'fluid', wire: 'cond' },
-        { name: 'evap', node: 'B', type: 'fluid', wire: 'evap' }
+        { name: 'OutCond', dstNode: 'B', type: 'fluid', dstEdge: 'InCond' },
+        { name: 'OutEvap', dstNode: 'B', type: 'fluid', dstEdge: 'InEvap' }
       ]
     }
   ]

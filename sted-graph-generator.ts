@@ -3,7 +3,7 @@ import deepClone from 'lodash/cloneDeep'
 
 import { StedGraph, StedNode } from './sted-graph-type'
 
-export class StedGraphAnalyer {
+export class StedGraphGenerator {
   private stedGraph: StedGraph
   static recycleNodeName: string = 'Recycle'
 
@@ -62,7 +62,7 @@ export class StedGraphAnalyer {
     })
   }
 
-  generateAnalyzableGraph(): StedGraph {
+  run(): StedGraph {
     let cycles = this.findCycles()
     console.debug('[DEBUG] cycles: ', cycles)
 
@@ -87,7 +87,7 @@ export class StedGraphAnalyer {
       // append new cycle node to the exsiting graph
       newGraph.stedNodes.push({
         name: cycleNodeName,
-        type: StedGraphAnalyer.recycleNodeName,
+        type: StedGraphGenerator.recycleNodeName,
         inlets: [
           {
             name: 'InStr',

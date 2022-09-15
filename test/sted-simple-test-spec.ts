@@ -1,4 +1,4 @@
-import { StedGraphAnalyer } from '../sted-graph-analyzer'
+import { StedGraphGenerator } from '../sted-graph-generator'
 import { StedGraph } from '../sted-graph-type'
 
 var exampleGraph: StedGraph = {
@@ -81,11 +81,11 @@ describe('sted-graph-analyzer', function () {
   describe('#no exception, no error()', function () {
     it('should run without any exception or error', async () => {
       try {
-        let stedGraphAnalyzer = new StedGraphAnalyer(exampleGraph)
+        let stedGraphAnalyzer = new StedGraphGenerator(exampleGraph)
         console.log('input grpah: ')
         stedGraphAnalyzer.print()
         console.log('generated graph: ')
-        console.log(JSON.stringify(stedGraphAnalyzer.generateAnalyzableGraph()))
+        console.log(JSON.stringify(stedGraphAnalyzer.run()))
       } catch (ex) {
         console.error('Exception: ', ex)
       }
